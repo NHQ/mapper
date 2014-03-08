@@ -1,0 +1,25 @@
+{
+  "name": "mapper",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "concat-stream": "~1.4.3",
+    "google-geocoding": "~0.1.7",
+    "hyperquest": "~0.2.0",
+    "json-stream": "~0.2.0",
+    "level-geo": "~0.0.3",
+    "level-sublevel": "~5.2.0",
+    "leveldown": "~0.10.2",
+    "levelup": "~0.18.2",
+    "line-stream": "~0.0.3",
+    "restify": "~2.6.3",
+    "uuid": "~1.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
