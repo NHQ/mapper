@@ -1,4 +1,4 @@
-To Install:
+Install and run:
 
 ```
 git clone https://github.com/samsungaccelerator/mapper.git
