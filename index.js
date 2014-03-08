@@ -42,21 +42,23 @@ server.get('/data', function(req, res, next){
 		bbox: bbox
 	//	bbox: [[-122.18280096717119, 37.78858395077543], [-122.18280096717119, 37.78858395077543]]
 	}).pipe(concat(function(data){
-		if(!data.length) data = []; 
-		res.write(JSON.stringify(data));
+		if(!data.length) data = {}; 
+		res.write(JSON.stringify({data: data}));
 		res.end()
 	}))
-	s.on('error', console.log)
+	s.on('error', function(err){console.error(err)})
 	s.on('end', function(){})
 })
 
 server.post('/data', function(req, res, next){
 	var id = uuid.v4()
+	req.params.lat = parseFloat(req.params.lat)
+	req.params.lng = parseFloat(req.params.lng)
 	geo.put(id, req.params, function(err){
 		if(err) console.error(err)
 	})
-	res.writeHead(200)
-	res.end()
+	res.writeHead(200, {"content-type":"application/json"})
+	res.end(req.params)
 })
 
 server.listen(11111, function () {
