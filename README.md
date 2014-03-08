@@ -8,3 +8,9 @@ mkdir node_modules
 npm install .
 node index.js
 ```
+
+NOTE: TO RESTART YOU HAVE TO DELETE EVERYTHING IN /data
+
+```
+rm -rf data/*
+```
