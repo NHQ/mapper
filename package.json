@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
+  "scripts" : {
+    "start" : "rm -r data/* && node index.js"
+  },
   "dependencies": {
     "concat-stream": "~1.4.3",
     "google-geocoding": "~0.1.7",
@@ -17,9 +20,6 @@
     "uuid": "~1.4.1"
   },
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
   "license": "ISC"
 }

@@ -15,7 +15,6 @@ var server = restify.createServer({
 	version: '0.0.1'
 })
 var count = 0
-console.log(DB.location)
 var rs = fs.createReadStream('./trees.geojson').pipe(ls).on('data', function(data){
 	var id = uuid.v4()
 	data = {species: data.properties.SPECIES, lng: data.geometry.coordinates[0], lat: data.geometry.coordinates[1]}
@@ -24,10 +23,11 @@ var rs = fs.createReadStream('./trees.geojson').pipe(ls).on('data', function(dat
 })
 
 rs.on('end', function(){
-	console.log('done\n')
-	gdb.createSearchStream({
-		bbox: [[-122.18280096717119, 37.78858395077543], [-122.18280096717119, 37.78858395077543]]
-	}).on('data', function(data){console.log(data)})	
+	console.log('done loading database.')
+  console.log('\ntry http://0.0.0.0:11111/data?lat=37.788583950&lng=-122.18280096&radius=0.02')
+//	gdb.createSearchStream({
+	//	bbox: [[-122.18280096717119, 37.78858395077543], [-122.18280096717119, 37.78858395077543]]
+//	}).on('data', function(data){console.log(data)})	
 })
 
 server.use(restify.acceptParser(server.acceptable));
@@ -63,6 +63,7 @@ server.post('/data', function(req, res, next){
 
 server.listen(11111, function () {
   console.log('%s listening at %s', server.name, server.url);
+  console.log('loading database...')
 });
 //g.geocode('3276 logan st, oakland ca 94601', function(err, loc){
 //	console.log(err, loc)	
