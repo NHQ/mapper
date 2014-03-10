@@ -1,7 +1,7 @@
 Install and run:
 
 ```
-git clone https://github.com/samsungaccelerator/mapper.git
+git clone this repo
 cd mapper
 mkdir data
 npm install .
