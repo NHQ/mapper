@@ -4,13 +4,10 @@ Install and run:
 git clone https://github.com/samsungaccelerator/mapper.git
 cd mapper
 mkdir data
-mkdir node_modules
 npm install .
-node index.js
+npm run start
 ```
 
-NOTE: TO RESTART YOU HAVE TO DELETE EVERYTHING IN /data
+it takes a few seconds to load the database of trees.
 
-```
-rm -rf data/*
-```
+this uses [level-geo](https://npmjs.org/package/level-geo)
