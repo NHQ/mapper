@@ -6,10 +6,19 @@ var sub = require('level-sublevel')
 var geoLevel = require('level-geo')
 var uuid = require('uuid')
 var concat = require('concat-stream')
-//var db = sub(level('./data'))
-//var geo = db.sublevel('geo')
-var DB = level('./data')
+var sessionStore = require('./lib/sessions')
+var allowCORS = require('./lib/allowCORS')
+//var auth = require('./lib/auth.js')
+var users = level('./data/users/')
+var DB = level('./data/geos')
 var gdb = geoLevel(DB)
+
+process.on('exit', function(c0de){
+  console.log(c0de)
+  users.close(function(){console.log('users closed')})
+  gdb.close(function(){console.log('gdb closed')})
+})
+
 var server = restify.createServer({
 	name: 'geoTest',
 	version: '0.0.1'
@@ -33,9 +42,26 @@ rs.on('end', function(){
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
+server.use(sessionStore)
+server.use(allowCORS)
+  
+server.post('/register', function(req, res, next){
+  var _data = req.body;
+  //console.log(_data.email)
+  users.get(_data.email, function(err, data){
+    if(err) {
+      users.put(_data.email, JSON.stringify({email: _data.email}), function(err, data){ if(err)console.error('new users put error', err.toString());
+        else console.log('data', data)
+      })
+    }
+    else console.log('data', typeof data, data)
+  })
+  res.end()
+})
 
 server.get('/data', function(req, res, next){
-	res.writeHead(200, {"Content-Type":"application/json"})
+	console.log(req.session)
+  res.writeHead(200, {"Content-Type":"application/json"})
 	var r = parseFloat(req.params.radius) || .002
 	var bbox = [ [ parseFloat(req.params.lng) - r, parseFloat(req.params.lat) - r], [ parseFloat(req.params.lng) + r, parseFloat(req.params.lat) + r] ];
 	var s = gdb.createSearchStream({
