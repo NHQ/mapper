@@ -46,15 +46,20 @@ server.use(sessionStore)
 server.use(allowCORS)
   
 server.post('/register', function(req, res, next){
-  var _data = req.body;
-  //console.log(_data.email)
+  var _data = JSON.parse(req.body);
   users.get(_data.email, function(err, data){
     if(err) {
-      users.put(_data.email, JSON.stringify({email: _data.email}), function(err, data){ if(err)console.error('new users put error', err.toString());
-        else console.log('data', data)
+      users.put(_data.email, JSON.stringify({email: _data.email}), function(err, data){
+        if(err)console.error('new users put error', err.toString());
+        else{ // data is undefined, but user is created
+          res.writeHead(302, {"Location":server.url})
+          res.end()
+        }
       })
     }
-    else console.log('data', typeof data, data)
+    else {// email already taken!
+      console.log('data', typeof data, data)
+    }
   })
   res.end()
 })
