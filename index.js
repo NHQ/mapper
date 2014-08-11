@@ -6,17 +6,19 @@ var sub = require('level-sublevel')
 var geoLevel = require('level-geo')
 var uuid = require('uuid')
 var concat = require('concat-stream')
-var sessionStore = require('./lib/sessions')
 var allowCORS = require('./lib/allowCORS')
 //var auth = require('./lib/auth.js')
-var users = level('./data/users/')
-var DB = level('./data/geos')
+//var users = level('./data/users/')
+var DB = sub(level('./data'))
+var users = DB.sublevel('users')
+var geo = DB.sublevel('geo')
 var gdb = geoLevel(DB)
-
+var sessionStore = require('./lib/sessions')(DB)
 process.on('exit', function(c0de){
   console.log(c0de)
-  users.close(function(){console.log('users closed')})
-  gdb.close(function(){console.log('gdb closed')})
+  DB.close()
+//  users.close(function(){console.log('users closed')})
+//  gdb.close(function(){console.log('gdb closed')})
 })
 
 var server = restify.createServer({
@@ -28,11 +30,13 @@ var rs = fs.createReadStream('./trees.geojson').pipe(ls).on('data', function(dat
 	var id = uuid.v4()
 	data = {species: data.properties.SPECIES, lng: data.geometry.coordinates[0], lat: data.geometry.coordinates[1]}
 //	console.log(data)
-	gdb.put(id, data)
+//	gdb.put(id, data)
 })
 
 rs.on('end', function(){
-	console.log('done loading database.')
+  console.log(gdb._rtree.toJSON().slice(0,50000))
+//  gdb.saveIndex()
+  console.log('done loading database.')
   console.log('\ntry http://0.0.0.0:11111/data?lat=37.788583950&lng=-122.18280096&radius=0.02')
 //	gdb.createSearchStream({
 	//	bbox: [[-122.18280096717119, 37.78858395077543], [-122.18280096717119, 37.78858395077543]]
